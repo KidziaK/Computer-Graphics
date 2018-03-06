@@ -18,3 +18,13 @@ C:\Users\Mikołaj\source\repos\CG\CG_01_Filters\CG_01_Filters\obj\Debug\CG_01_Fi
 C:\Users\Mikołaj\source\repos\CG\CG_01_Filters\CG_01_Filters\obj\Debug\CG_01_Filters.csproj.CoreCompileInputs.cache
 C:\Users\Mikołaj\source\repos\CG\CG_01_Filters\CG_01_Filters\obj\Debug\CG_01_Filters.exe
 C:\Users\Mikołaj\source\repos\CG\CG_01_Filters\CG_01_Filters\obj\Debug\CG_01_Filters.pdb
+C:\Users\kidam\Source\Repos\Computer-Graphics\CG_01_Filters\CG_01_Filters\bin\Debug\CG_01_Filters.exe.config
+C:\Users\kidam\Source\Repos\Computer-Graphics\CG_01_Filters\CG_01_Filters\bin\Debug\CG_01_Filters.exe
+C:\Users\kidam\Source\Repos\Computer-Graphics\CG_01_Filters\CG_01_Filters\bin\Debug\CG_01_Filters.pdb
+C:\Users\kidam\Source\Repos\Computer-Graphics\CG_01_Filters\CG_01_Filters\obj\Debug\CG_01_Filters.csprojResolveAssemblyReference.cache
+C:\Users\kidam\Source\Repos\Computer-Graphics\CG_01_Filters\CG_01_Filters\obj\Debug\CG_01_Filters.Filters.resources
+C:\Users\kidam\Source\Repos\Computer-Graphics\CG_01_Filters\CG_01_Filters\obj\Debug\CG_01_Filters.Properties.Resources.resources
+C:\Users\kidam\Source\Repos\Computer-Graphics\CG_01_Filters\CG_01_Filters\obj\Debug\CG_01_Filters.csproj.GenerateResource.Cache
+C:\Users\kidam\Source\Repos\Computer-Graphics\CG_01_Filters\CG_01_Filters\obj\Debug\CG_01_Filters.csproj.CoreCompileInputs.cache
+C:\Users\kidam\Source\Repos\Computer-Graphics\CG_01_Filters\CG_01_Filters\obj\Debug\CG_01_Filters.exe
+C:\Users\kidam\Source\Repos\Computer-Graphics\CG_01_Filters\CG_01_Filters\obj\Debug\CG_01_Filters.pdb

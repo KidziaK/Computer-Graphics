@@ -462,7 +462,7 @@ namespace CG_01_Filters
             D.Text = "1";
             H.Text = "3";
             W.Text = "3";
-            Off.Text = "20";
+            Off.Text = "127";
 
             Int32.TryParse(D.Text, out div);
             Int32.TryParse(H.Text, out kernelH);
@@ -591,7 +591,7 @@ namespace CG_01_Filters
                     double sumR = 0;
                     double sumG = 0;
                     double sumB = 0;
-                    for (int i = center.X; i < kernelW; i++)
+                    for (int i = 0; i < kernelW; i++)
                     {
                         
                         for (int j = 0; j < kernelH; j++)
@@ -605,22 +605,6 @@ namespace CG_01_Filters
                             sumG += pixel.G * weight[i,j];
                             sumB += pixel.B * weight[i,j];
 
-                        }
-                    }
-
-                    for (int i = center.X - 1; i >= 0; i--)
-                    {
-                        
-                        for (int j = 0; j < kernelH; j++)
-                        {
-                            Color pixel = new Color();                            
-                            int newX = x + i - center.X, newY = y + j - center.Y;
-                            if (newX < 0 || newX >= width || newY < 0 || newY >= height) pixel = Color.FromArgb(0, 0, 0);
-                            else pixel = original[x + i - center.X, y + j - center.Y]; ;
-
-                            sumR += pixel.R * weight[i, j];
-                            sumG += pixel.G * weight[i, j];
-                            sumB += pixel.B * weight[i, j];
                         }
                     }
 

@@ -15,13 +15,13 @@ namespace CG_01_Filters
     {
         Brightness,
         Contrast,
-        Negation
-
+        Negation,
+        GammaCorrection
     };
 
     public partial class Filters : Form
     {
-        public double contrastValue = 1.5;
+        public double contrastValue = 1.5, gammaFactor = 1f;
         public int kernelH, kernelW, div, off;
         public Filters()
         {
@@ -29,6 +29,7 @@ namespace CG_01_Filters
             Choice.Items.Add(Functions.Brightness);
             Choice.Items.Add(Functions.Contrast);
             Choice.Items.Add(Functions.Negation);
+            Choice.Items.Add(Functions.GammaCorrection);
 
             ClearKernel();
 
@@ -132,13 +133,20 @@ namespace CG_01_Filters
             {
                 case Functions.Brightness:
                     Track.Enabled = true;
+                    Gamma.Enabled = false;
                     break;
 
                 case Functions.Contrast:
                     Track.Enabled = false;
+                    Gamma.Enabled = false;
                     break;
 
                 case Functions.Negation:
+                    Track.Enabled = false;
+                    Gamma.Enabled = false;
+                    break;
+                case Functions.GammaCorrection:
+                    Gamma.Enabled = true;
                     Track.Enabled = false;
                     break;
             }
@@ -201,9 +209,9 @@ namespace CG_01_Filters
                 {
 
                     Color pixel = outputImage.GetPixel(x, y);
-                    int red = (int)((double)pixel.R * contrastValue);
-                    int green = (int)((double)pixel.G * contrastValue);
-                    int blue = (int)((double)pixel.B * contrastValue);
+                    int red = (int)(((double)pixel.R - 127) * contrastValue) + 127;
+                    int green = (int)(((double)pixel.G - 127) * contrastValue) + 127;
+                    int blue = (int)(((double)pixel.B - 127) * contrastValue) + 127;
 
                     if (red < 256 && red > 0) ;
                     else if (red > 255) red = 255;
@@ -217,6 +225,19 @@ namespace CG_01_Filters
                     else if (blue > 255) blue = 255;
                     else blue = 0;
                     outputImage.SetPixel(x, y, Color.FromArgb(red, green, blue));
+                }
+            }
+            Output.Image = outputImage;
+        }
+        private void GammaCorrection()
+        {
+            Bitmap outputImage = new Bitmap(Input.Image);
+            for (int x = 0; x < outputImage.Width; x++)
+            {
+                for (int y = 0; y < outputImage.Height; y++)
+                {
+                    Color pixel = outputImage.GetPixel(x, y);
+                    outputImage.SetPixel(x, y, Color.FromArgb((int)(255*Math.Pow((double)pixel.R/255, gammaFactor)), (int)(255*Math.Pow((double)pixel.G/255, gammaFactor)), (int)(255*Math.Pow((double)pixel.B/255, gammaFactor))));
                 }
             }
             Output.Image = outputImage;
@@ -239,12 +260,15 @@ namespace CG_01_Filters
                     case Functions.Negation:
                         Negation();
                         break;
+                    case Functions.GammaCorrection:
+                        GammaCorrection();
+                        break;
                 }
 
             }
             catch
             {
-                MessageBox.Show("Image is not loaded");
+
             }
         }
 
@@ -428,17 +452,17 @@ namespace CG_01_Filters
             Kernel.Controls.Add(new TextBox() { Text = "0", Anchor = AnchorStyles.Left, TextAlign = HorizontalAlignment.Center }, 0, 0);
             Kernel.Controls.Add(new TextBox() { Text = "-1", Anchor = AnchorStyles.Left, TextAlign = HorizontalAlignment.Center }, 1, 0);
             Kernel.Controls.Add(new TextBox() { Text = "0", Anchor = AnchorStyles.Left, TextAlign = HorizontalAlignment.Center }, 2, 0);
-            Kernel.Controls.Add(new TextBox() { Text = "0", Anchor = AnchorStyles.Left, TextAlign = HorizontalAlignment.Center }, 0, 1);
-            Kernel.Controls.Add(new TextBox() { Text = "1", Anchor = AnchorStyles.Left, TextAlign = HorizontalAlignment.Center, BackColor = Color.YellowGreen }, 1, 1);
-            Kernel.Controls.Add(new TextBox() { Text = "0", Anchor = AnchorStyles.Left, TextAlign = HorizontalAlignment.Center }, 2, 1);
+            Kernel.Controls.Add(new TextBox() { Text = "-1", Anchor = AnchorStyles.Left, TextAlign = HorizontalAlignment.Center }, 0, 1);
+            Kernel.Controls.Add(new TextBox() { Text = "4", Anchor = AnchorStyles.Left, TextAlign = HorizontalAlignment.Center, BackColor = Color.YellowGreen }, 1, 1);
+            Kernel.Controls.Add(new TextBox() { Text = "-1", Anchor = AnchorStyles.Left, TextAlign = HorizontalAlignment.Center }, 2, 1);
             Kernel.Controls.Add(new TextBox() { Text = "0", Anchor = AnchorStyles.Left, TextAlign = HorizontalAlignment.Center }, 0, 2);
-            Kernel.Controls.Add(new TextBox() { Text = "0", Anchor = AnchorStyles.Left, TextAlign = HorizontalAlignment.Center }, 1, 2);
+            Kernel.Controls.Add(new TextBox() { Text = "-1", Anchor = AnchorStyles.Left, TextAlign = HorizontalAlignment.Center }, 1, 2);
             Kernel.Controls.Add(new TextBox() { Text = "0", Anchor = AnchorStyles.Left, TextAlign = HorizontalAlignment.Center }, 2, 2);
 
             D.Text = "1";
             H.Text = "3";
             W.Text = "3";
-            Off.Text = "0";
+            Off.Text = "127";
 
             Int32.TryParse(D.Text, out div);
             Int32.TryParse(H.Text, out kernelH);
@@ -485,10 +509,7 @@ namespace CG_01_Filters
                     space.MouseDoubleClick += new MouseEventHandler(ItemClick);
                 }
 
-                Int32.TryParse(D.Text, out div);
-                Int32.TryParse(H.Text, out kernelH);
-                Int32.TryParse(W.Text, out kernelW);
-                Int32.TryParse(Off.Text, out off);
+               
 
 
             }
@@ -517,6 +538,16 @@ namespace CG_01_Filters
 
         }
 
+        private void Gamma_ValueChanged(object sender, EventArgs e)
+        {
+            gammaFactor = Gamma.Value/10f;
+        }
+
+        private void Gamma_Scroll(object sender, EventArgs e)
+        {
+            
+        }
+
         private Color [,] CopyColorArr(Bitmap output, int width, int height)
         {
             Color[,] ret = new Color[width, height];
@@ -534,6 +565,11 @@ namespace CG_01_Filters
 
         private void CApply_Click(object sender, EventArgs e)
         {
+            Int32.TryParse(D.Text, out div);
+            Int32.TryParse(H.Text, out kernelH);
+            Int32.TryParse(W.Text, out kernelW);
+            Int32.TryParse(Off.Text, out off);
+
             Point center = FindCenter();
             Bitmap output = new Bitmap(Input.Image);
             int width = output.Width, height = output.Height;
@@ -555,7 +591,7 @@ namespace CG_01_Filters
                     double sumR = 0;
                     double sumG = 0;
                     double sumB = 0;
-                    for (int i = center.X; i < kernelW; i++)
+                    for (int i = 0; i < kernelW; i++)
                     {
                         
                         for (int j = 0; j < kernelH; j++)
@@ -569,22 +605,6 @@ namespace CG_01_Filters
                             sumG += pixel.G * weight[i,j];
                             sumB += pixel.B * weight[i,j];
 
-                        }
-                    }
-
-                    for (int i = center.X - 1; i >= 0; i--)
-                    {
-                        
-                        for (int j = 0; j < kernelH; j++)
-                        {
-                            Color pixel = new Color();                            
-                            int newX = x + i - center.X, newY = y + j - center.Y;
-                            if (newX < 0 || newX >= width || newY < 0 || newY >= height) pixel = Color.FromArgb(0, 0, 0);
-                            else pixel = original[x + i - center.X, y + j - center.Y]; ;
-
-                            sumR += pixel.R * weight[i, j];
-                            sumG += pixel.G * weight[i, j];
-                            sumB += pixel.B * weight[i, j];
                         }
                     }
 

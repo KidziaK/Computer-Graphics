@@ -10,11 +10,75 @@ using System.Windows.Forms;
 
 namespace CG_02_Dithering
 {
-    public partial class Form1 : Form
+    public enum Algorithms
     {
-        public Form1()
+        Average,
+        Error
+    };
+    public partial class Dithering : Form
+    {
+        int imageWidth, imageHeight, greyvalueSum, K = 2;
+
+        private Bitmap AverageDithering(Bitmap outputImage)
+        {
+            int[] tresholds = new int[K];
+            int ratio = greyvalueSum / (imageHeight * imageWidth * (int)Math.Log((double)K, 2.0));
+            for (int i = 0; i < tresholds.Length; i++)
+            {
+                tresholds[i] = i * ratio;
+            }
+
+            for (int x = 0; x < imageWidth; x++)
+            {
+                for (int y = 0; y < imageHeight; y++)
+                {
+                    int value = 255;
+                    Color pixel = outputImage.GetPixel(x, y);
+
+                    for (int i = 1; i < tresholds.Length; i++)
+                    {
+                        if (pixel.R < tresholds[i] && pixel.R >= tresholds[i - 1])
+                        {
+                            value = (i - 1) * (255 / (tresholds.Length - 1));
+                            break;
+                        }
+                    }
+
+                    outputImage.SetPixel(x, y, Color.FromArgb(value, value, value));
+                }
+            }
+            return outputImage;
+        }
+        private void applyButton_Click(object sender, EventArgs e)
+        {
+            Bitmap outputImage = new Bitmap(pictureBox2.Image);
+
+            if (kText.Text == "") ;
+            else Int32.TryParse(kText.Text, out K);
+
+            switch (algorithmCombo.SelectedItem)
+            {
+                case Algorithms.Error:
+
+                    break;
+
+                default:
+                    outputImage = AverageDithering(outputImage);
+                    break;
+
+            }
+
+            pictureBox3.Image = outputImage;
+
+
+        }
+
+        public Dithering()
         {
             InitializeComponent();
+            algorithmCombo.Items.Add(Algorithms.Average);
+            algorithmCombo.Items.Add(Algorithms.Error);
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -32,48 +96,39 @@ namespace CG_02_Dithering
                 }
 
                 Bitmap outputImage = new Bitmap(pictureBox1.Image);
-                int height = outputImage.Height;
-                int width = outputImage.Width;
-                int sum = 0;
-                for (int x = 0; x < outputImage.Width; x++)
+                imageHeight = outputImage.Height;
+                imageWidth = outputImage.Width;
+                greyvalueSum = 0;
+                for (int x = 0; x < imageWidth; x++)
                 {
-                    for (int y = 0; y < outputImage.Height; y++)
+                    for (int y = 0; y < imageHeight; y++)
                     {
 
                         Color pixel = outputImage.GetPixel(x, y);
                         int greyValue = (int)(0.3 * (double)pixel.G + 0.6 * (double)pixel.R + 0.1 * (double)pixel.B);
 
-                        sum += greyValue;
+                        greyvalueSum += greyValue;
                         outputImage.SetPixel(x, y, Color.FromArgb(greyValue, greyValue, greyValue));
                     }
                 }
                 pictureBox2.Image = outputImage;
-
                 outputImage = new Bitmap(pictureBox2.Image);
-                int treshold = sum / (height * width);
+                if (kText.Text == "") ;
+                else Int32.TryParse(kText.Text, out K);
 
-                for (int x = 0; x < outputImage.Width; x++)
+                switch (algorithmCombo.SelectedItem)
                 {
-                    for (int y = 0; y < outputImage.Height; y++)
-                    {
-                            int red, blue, green;
-                        Color pixel = outputImage.GetPixel(x, y);
-                        if(pixel.R < treshold)
-                            {
-                                red = 0;
-                                green = 0;
-                                blue = 0;
-                            }
-                            else
-                            {
-                                red = 255;
-                                green = 255;
-                                blue = 255;
-                            }
-                        outputImage.SetPixel(x, y, Color.FromArgb(red, green, blue));
-                    }
+                    case Algorithms.Error:
+                        
+                        break;
+
+                    default:
+                        outputImage = AverageDithering(outputImage);
+                        break;
                 }
-            pictureBox3.Image = outputImage;
+
+                pictureBox3.Image = outputImage;
+
                 }
             }
         

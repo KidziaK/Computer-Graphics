@@ -13,7 +13,11 @@ namespace CG_02_Dithering
     public enum Algorithms
     {
         Average,
-        Error
+        Error,
+        Popularity_algorithm,
+        k_means_color_quantization
+
+
     };
     public partial class Dithering : Form
     {
@@ -49,6 +53,21 @@ namespace CG_02_Dithering
             }
             return outputImage;
         }
+
+        private Bitmap ErrorDiffusion(Bitmap outputImage)
+        {
+            return outputImage;
+        }
+
+        private Bitmap UniformColorQuantization(Bitmap outputImage)
+        {
+            return outputImage;
+        }
+
+        private Bitmap kMeansColorQuantization(Bitmap outputImage)
+        {
+            return outputImage;
+        }
         private void applyButton_Click(object sender, EventArgs e)
         {
             Bitmap outputImage = new Bitmap(pictureBox2.Image);
@@ -59,7 +78,15 @@ namespace CG_02_Dithering
             switch (algorithmCombo.SelectedItem)
             {
                 case Algorithms.Error:
+                    ErrorDiffusion(outputImage);
+                    break;
 
+                case Algorithms.k_means_color_quantization:
+                    UniformColorQuantization(outputImage);
+                    break;
+
+                case Algorithms.Popularity_algorithm:
+                    kMeansColorQuantization(outputImage);
                     break;
 
                 default:
@@ -78,6 +105,8 @@ namespace CG_02_Dithering
             InitializeComponent();
             algorithmCombo.Items.Add(Algorithms.Average);
             algorithmCombo.Items.Add(Algorithms.Error);
+            algorithmCombo.Items.Add(Algorithms.k_means_color_quantization);
+            algorithmCombo.Items.Add(Algorithms.Popularity_algorithm);
 
         }
 
@@ -116,16 +145,7 @@ namespace CG_02_Dithering
                 if (kText.Text == "") ;
                 else Int32.TryParse(kText.Text, out K);
 
-                switch (algorithmCombo.SelectedItem)
-                {
-                    case Algorithms.Error:
-                        
-                        break;
-
-                    default:
-                        outputImage = AverageDithering(outputImage);
-                        break;
-                }
+                outputImage = AverageDithering(outputImage);
 
                 pictureBox3.Image = outputImage;
 

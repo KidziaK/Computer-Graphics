@@ -34,12 +34,12 @@
             this.Load = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.Save2 = new System.Windows.Forms.Button();
-            this.Save3 = new System.Windows.Forms.Button();
             this.algorithmLabel = new System.Windows.Forms.Label();
             this.kLabel = new System.Windows.Forms.Label();
             this.kText = new System.Windows.Forms.TextBox();
             this.algorithmCombo = new System.Windows.Forms.ComboBox();
+            this.Save2 = new System.Windows.Forms.Button();
+            this.Save3 = new System.Windows.Forms.Button();
             this.applyButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -67,6 +67,7 @@
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox2.TabIndex = 1;
             this.pictureBox2.TabStop = false;
+            this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
             // 
             // pictureBox3
             // 
@@ -133,26 +134,6 @@
             this.tableLayoutPanel2.Size = new System.Drawing.Size(544, 35);
             this.tableLayoutPanel2.TabIndex = 5;
             // 
-            // Save2
-            // 
-            this.Save2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.Save2.Location = new System.Drawing.Point(775, 793);
-            this.Save2.Name = "Save2";
-            this.Save2.Size = new System.Drawing.Size(105, 36);
-            this.Save2.TabIndex = 6;
-            this.Save2.Text = "Save";
-            this.Save2.UseVisualStyleBackColor = true;
-            // 
-            // Save3
-            // 
-            this.Save3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.Save3.Location = new System.Drawing.Point(1327, 793);
-            this.Save3.Name = "Save3";
-            this.Save3.Size = new System.Drawing.Size(105, 36);
-            this.Save3.TabIndex = 7;
-            this.Save3.Text = "Save";
-            this.Save3.UseVisualStyleBackColor = true;
-            // 
             // algorithmLabel
             // 
             this.algorithmLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
@@ -182,6 +163,7 @@
             this.kText.Name = "kText";
             this.kText.Size = new System.Drawing.Size(21, 20);
             this.kText.TabIndex = 2;
+            this.kText.Text = "2";
             // 
             // algorithmCombo
             // 
@@ -191,6 +173,26 @@
             this.algorithmCombo.Name = "algorithmCombo";
             this.algorithmCombo.Size = new System.Drawing.Size(121, 21);
             this.algorithmCombo.TabIndex = 3;
+            // 
+            // Save2
+            // 
+            this.Save2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.Save2.Location = new System.Drawing.Point(775, 793);
+            this.Save2.Name = "Save2";
+            this.Save2.Size = new System.Drawing.Size(105, 36);
+            this.Save2.TabIndex = 6;
+            this.Save2.Text = "Save";
+            this.Save2.UseVisualStyleBackColor = true;
+            // 
+            // Save3
+            // 
+            this.Save3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.Save3.Location = new System.Drawing.Point(1327, 793);
+            this.Save3.Name = "Save3";
+            this.Save3.Size = new System.Drawing.Size(105, 36);
+            this.Save3.TabIndex = 7;
+            this.Save3.Text = "Save";
+            this.Save3.UseVisualStyleBackColor = true;
             // 
             // applyButton
             // 

@@ -220,6 +220,153 @@ namespace CG_02_Dithering
 
                     if (x + 1 < imageWidth)
                     {
+                        if (greyImage[x + 1, y] + (int)(1 * (double)difference / 8) > 0 && greyImage[x + 1, y] + (int)(1 * (double)difference / 8) <= 255) greyImage[x + 1, y] = greyImage[x + 1, y] + (int)(1 * (double)difference / 8);
+                        else greyImage[x + 1, y] = FindMinimalGreyDistance(greyPalette, greyImage[x + 1, y]); ;
+                    }
+
+                    if (x + 2 < imageWidth)
+                    {
+                        if (greyImage[x + 2, y] + (int)(1 * (double)difference / 8) > 0 && greyImage[x + 2, y] + (int)(1 * (double)difference / 8) <= 255) greyImage[x + 2, y] = greyImage[x + 2, y] + (int)(1 * (double)difference / 8);
+                        else greyImage[x + 2, y] = FindMinimalGreyDistance(greyPalette, greyImage[x + 2, y]); ;
+                    }
+
+                    if (x - 1 > 0 && y + 1 < imageHeight)
+                    {
+                        if (greyImage[x - 1, y + 1] + (int)(1 * (double)difference / 8) > 0 && greyImage[x - 1, y + 1] + (int)(1 * (double)difference / 8) <= 255) greyImage[x - 1, y + 1] = greyImage[x - 1, y + 1] + (int)(1 * (double)difference / 8);
+                        else greyImage[x - 1, y + 1] = FindMinimalGreyDistance(greyPalette, greyImage[x - 1, y + 1]);
+                    }
+
+                    if (y + 1 < imageHeight)
+                    {
+                        if (greyImage[x, y + 1] + (int)(1 * (double)difference / 8) > 0 && greyImage[x, y + 1] + (int)(1 * (double)difference / 8) <= 255) greyImage[x, y + 1] = greyImage[x, y + 1] + (int)(1 * (double)difference / 8);
+                        else greyImage[x, y + 1] = FindMinimalGreyDistance(greyPalette, greyImage[x, y + 1]);
+                    }
+
+                    if (y + 2 < imageHeight)
+                    {
+                        if (greyImage[x, y + 2] + (int)(1 * (double)difference / 8) > 0 && greyImage[x, y + 2] + (int)(1 * (double)difference / 8) <= 255) greyImage[x, y + 2] = greyImage[x, y + 2] + (int)(1 * (double)difference / 8);
+                        else greyImage[x, y + 2] = FindMinimalGreyDistance(greyPalette, greyImage[x, y + 2]);
+                    }
+
+                    if (x + 1 < imageWidth && y + 1 < imageHeight)
+                    {
+                        if (greyImage[x + 1, y + 1] + (int)((double)difference / 8) > 0 && greyImage[x + 1, y + 1] + (int)((double)difference / 8) <= 255) greyImage[x + 1, y + 1] = greyImage[x + 1, y + 1] + (int)((double)difference / 8);
+                        else greyImage[x + 1, y + 1] = FindMinimalGreyDistance(greyPalette, greyImage[x + 1, y + 1]);
+                    }
+
+
+                }
+            }
+
+            for (int x = 0; x < imageWidth; x++)
+            {
+                for (int y = 0; y < imageHeight; y++)
+                {
+                    outputImage.SetPixel(x, y, Color.FromArgb(greyImage[x, y], greyImage[x, y], greyImage[x, y]));
+                }
+            }
+
+
+            return outputImage;
+        }
+
+        private Bitmap Burkes(Bitmap outputImage)
+        {
+            List<int> greyPalette = new List<int>();
+            int[,] greyImage = ConvertBitMapToGreyImage(outputImage);
+
+            int step = 255 / (K - 1);
+            for (int i = 0; i < K; i++)
+            {
+                greyPalette.Add(i * step);
+            }
+
+            for (int x = 0; x < imageWidth; x++)
+            {
+                for (int y = 0; y < imageHeight; y++)
+                {
+                    int pixel = greyImage[x, y];
+                    int newColor = FindMinimalGreyDistance(greyPalette, pixel);
+                    int difference = pixel - newColor;
+                    greyImage[x, y] = newColor;
+
+                    if (x + 1 < imageWidth)
+                    {
+                        if (greyImage[x + 1, y] + (int)(8 * (double)difference / 32) > 0 && greyImage[x + 1, y] + (int)(8 * (double)difference / 32) <= 255) greyImage[x + 1, y] = greyImage[x + 1, y] + (int)(8 * (double)difference / 32);
+                        else greyImage[x + 1, y] = FindMinimalGreyDistance(greyPalette, greyImage[x + 1, y]); ;
+                    }
+
+                    if (x + 2 < imageWidth)
+                    {
+                        if (greyImage[x + 2, y] + (int)(4 * (double)difference / 32) > 0 && greyImage[x + 2, y] + (int)(4 * (double)difference / 32) <= 255) greyImage[x + 2, y] = greyImage[x + 2, y] + (int)(4 * (double)difference / 32);
+                        else greyImage[x + 2, y] = FindMinimalGreyDistance(greyPalette, greyImage[x + 2, y]); ;
+                    }
+
+                    if (x - 1 > 0 && y + 1 < imageHeight)
+                    {
+                        if (greyImage[x - 1, y + 1] + (int)(4 * (double)difference / 32) > 0 && greyImage[x - 1, y + 1] + (int)(4 * (double)difference / 32) <= 255) greyImage[x - 1, y + 1] = greyImage[x - 1, y + 1] + (int)(4 * (double)difference / 32);
+                        else greyImage[x - 1, y + 1] = FindMinimalGreyDistance(greyPalette, greyImage[x - 1, y + 1]);
+                    }
+
+                    if (x - 2 > 0 && y + 1 < imageHeight)
+                    {
+                        if (greyImage[x - 2, y + 1] + (int)(2 * (double)difference / 32) > 0 && greyImage[x - 2, y + 1] + (int)(2 * (double)difference / 32) <= 255) greyImage[x - 2, y + 1] = greyImage[x - 2, y + 1] + (int)(2 * (double)difference / 32);
+                        else greyImage[x - 2, y + 1] = FindMinimalGreyDistance(greyPalette, greyImage[x - 2, y + 1]);
+                    }
+
+                    if (y + 1 < imageHeight)
+                    {
+                        if (greyImage[x, y + 1] + (int)(8 * (double)difference / 32) > 0 && greyImage[x, y + 1] + (int)(8 * (double)difference / 32) <= 255) greyImage[x, y + 1] = greyImage[x, y + 1] + (int)(8 * (double)difference / 32);
+                        else greyImage[x, y + 1] = FindMinimalGreyDistance(greyPalette, greyImage[x, y + 1]);
+                    }
+
+                    if (x + 1 < imageWidth && y + 1 < imageHeight)
+                    {
+                        if (greyImage[x + 1, y + 1] + (int)(4* (double)difference / 32) > 0 && greyImage[x + 1, y + 1] + (int)(4* (double)difference / 32) <= 255) greyImage[x + 1, y + 1] = greyImage[x + 1, y + 1] + (int)(4* (double)difference / 32);
+                        else greyImage[x + 1, y + 1] = FindMinimalGreyDistance(greyPalette, greyImage[x + 1, y + 1]);
+                    }
+
+                    if (x + 2 < imageWidth && y + 1 < imageHeight)
+                    {
+                        if (greyImage[x + 2, y + 1] + (int)(2 * (double)difference / 32) > 0 && greyImage[x + 2, y + 1] + (int)(2 * (double)difference / 32) <= 255) greyImage[x + 2, y + 1] = greyImage[x + 2, y + 1] + (int)(2 * (double)difference / 32);
+                        else greyImage[x + 2, y + 1] = FindMinimalGreyDistance(greyPalette, greyImage[x + 2, y + 1]);
+                    }
+
+                }
+            }
+
+            for (int x = 0; x < imageWidth; x++)
+            {
+                for (int y = 0; y < imageHeight; y++)
+                {
+                    outputImage.SetPixel(x, y, Color.FromArgb(greyImage[x, y], greyImage[x, y], greyImage[x, y]));
+                }
+            }
+            return outputImage;
+        }
+
+        private Bitmap Sierra(Bitmap outputImage)
+        {
+            List<int> greyPalette = new List<int>();
+            int[,] greyImage = ConvertBitMapToGreyImage(outputImage);
+
+            int step = 255 / (K - 1);
+            for (int i = 0; i < K; i++)
+            {
+                greyPalette.Add(i * step);
+            }
+
+            for (int x = 0; x < imageWidth; x++)
+            {
+                for (int y = 0; y < imageHeight; y++)
+                {
+                    int pixel = greyImage[x, y];
+                    int newColor = FindMinimalGreyDistance(greyPalette, pixel);
+                    int difference = pixel - newColor;
+                    greyImage[x, y] = newColor;
+
+                    if (x + 1 < imageWidth)
+                    {
                         if (greyImage[x + 1, y] + (int)(7 * (double)difference / 16) > 0 && greyImage[x + 1, y] + (int)(7 * (double)difference / 16) <= 255) greyImage[x + 1, y] = greyImage[x + 1, y] + (int)(7 * (double)difference / 16);
                         else greyImage[x + 1, y] = FindMinimalGreyDistance(greyPalette, greyImage[x + 1, y]); ;
                     }
@@ -253,23 +400,108 @@ namespace CG_02_Dithering
                     outputImage.SetPixel(x, y, Color.FromArgb(greyImage[x, y], greyImage[x, y], greyImage[x, y]));
                 }
             }
-
-
-            return outputImage;
-        }
-
-        private Bitmap Burkes(Bitmap outputImage)
-        {
-            return outputImage;
-        }
-
-        private Bitmap Sierra(Bitmap outputImage)
-        {
             return outputImage;
         }
 
         private Bitmap Stucky(Bitmap outputImage)
         {
+            List<int> greyPalette = new List<int>();
+            int[,] greyImage = ConvertBitMapToGreyImage(outputImage);
+
+            int step = 255 / (K - 1);
+            for (int i = 0; i < K; i++)
+            {
+                greyPalette.Add(i * step);
+            }
+
+            for (int x = 0; x < imageWidth; x++)
+            {
+                for (int y = 0; y < imageHeight; y++)
+                {
+                    int pixel = greyImage[x, y];
+                    int newColor = FindMinimalGreyDistance(greyPalette, pixel);
+                    int difference = pixel - newColor;
+                    greyImage[x, y] = newColor;
+
+                    if (x + 1 < imageWidth)
+                    {
+                        if (greyImage[x + 1, y] + (int)(8 * (double)difference / 42) > 0 && greyImage[x + 1, y] + (int)(8 * (double)difference / 42) <= 255) greyImage[x + 1, y] = greyImage[x + 1, y] + (int)(8 * (double)difference / 42);
+                        else greyImage[x + 1, y] = FindMinimalGreyDistance(greyPalette, greyImage[x + 1, y]); ;
+                    }
+
+                    if (x + 2 < imageWidth)
+                    {
+                        if (greyImage[x + 2, y] + (int)(4 * (double)difference / 42) > 0 && greyImage[x + 2, y] + (int)(4 * (double)difference / 42) <= 255) greyImage[x + 2, y] = greyImage[x + 2, y] + (int)(4 * (double)difference / 42);
+                        else greyImage[x + 2, y] = FindMinimalGreyDistance(greyPalette, greyImage[x + 2, y]); ;
+                    }
+
+                    if (x - 1 > 0 && y + 1 < imageHeight)
+                    {
+                        if (greyImage[x - 1, y + 1] + (int)(4 * (double)difference / 42) > 0 && greyImage[x - 1, y + 1] + (int)(4 * (double)difference / 42) <= 255) greyImage[x - 1, y + 1] = greyImage[x - 1, y + 1] + (int)(4 * (double)difference / 42);
+                        else greyImage[x - 1, y + 1] = FindMinimalGreyDistance(greyPalette, greyImage[x - 1, y + 1]);
+                    }
+
+                    if (x - 2 > 0 && y + 1 < imageHeight)
+                    {
+                        if (greyImage[x - 2, y + 1] + (int)(2 * (double)difference / 42) > 0 && greyImage[x - 2, y + 1] + (int)(2 * (double)difference / 42) <= 255) greyImage[x - 2, y + 1] = greyImage[x - 2, y + 1] + (int)(2 * (double)difference / 42);
+                        else greyImage[x - 2, y + 1] = FindMinimalGreyDistance(greyPalette, greyImage[x - 2, y + 1]);
+                    }
+
+                    if (y + 1 < imageHeight)
+                    {
+                        if (greyImage[x, y + 1] + (int)(8 * (double)difference / 42) > 0 && greyImage[x, y + 1] + (int)(8 * (double)difference / 42) <= 255) greyImage[x, y + 1] = greyImage[x, y + 1] + (int)(8 * (double)difference / 42);
+                        else greyImage[x, y + 1] = FindMinimalGreyDistance(greyPalette, greyImage[x, y + 1]);
+                    }
+
+                    if (x + 1 < imageWidth && y + 1 < imageHeight)
+                    {
+                        if (greyImage[x + 1, y + 1] + (int)(4 * (double)difference / 42) > 0 && greyImage[x + 1, y + 1] + (int)(4 * (double)difference / 42) <= 255) greyImage[x + 1, y + 1] = greyImage[x + 1, y + 1] + (int)(4 * (double)difference / 42);
+                        else greyImage[x + 1, y + 1] = FindMinimalGreyDistance(greyPalette, greyImage[x + 1, y + 1]);
+                    }
+
+                    if (x + 2 < imageWidth && y + 2 < imageHeight)
+                    {
+                        if (greyImage[x + 2, y + 2] + (int)(1 * (double)difference / 42) > 0 && greyImage[x + 2, y + 2] + (int)(1 * (double)difference / 42) <= 255) greyImage[x + 2, y + 2] = greyImage[x + 2, y + 2] + (int)(1 * (double)difference / 42);
+                        else greyImage[x + 2, y + 2] = FindMinimalGreyDistance(greyPalette, greyImage[x + 2, y + 2]);
+                    }
+
+                    if (x - 1 > 0 && y + 2 < imageHeight)
+                    {
+                        if (greyImage[x - 1, y + 2] + (int)(2 * (double)difference / 42) > 0 && greyImage[x - 1, y + 2] + (int)(2 * (double)difference / 42) <= 255) greyImage[x - 1, y + 2] = greyImage[x - 1, y + 2] + (int)(2 * (double)difference / 42);
+                        else greyImage[x - 1, y + 2] = FindMinimalGreyDistance(greyPalette, greyImage[x - 1, y + 2]);
+                    }
+
+                    if (x - 2 > 0 && y + 2 < imageHeight)
+                    {
+                        if (greyImage[x - 2, y + 2] + (int)(1 * (double)difference / 42) > 0 && greyImage[x - 2, y + 2] + (int)(1 * (double)difference / 42) <= 255) greyImage[x - 2, y + 2] = greyImage[x - 2, y + 2] + (int)(1 * (double)difference / 42);
+                        else greyImage[x - 2, y + 2] = FindMinimalGreyDistance(greyPalette, greyImage[x - 2, y + 2]);
+                    }
+
+                    if (y + 2 < imageHeight)
+                    {
+                        if (greyImage[x, y + 2] + (int)(4 * (double)difference / 42) > 0 && greyImage[x, y + 2] + (int)(4 * (double)difference / 42) <= 255) greyImage[x, y + 2] = greyImage[x, y + 2] + (int)(4 * (double)difference / 42);
+                        else greyImage[x, y + 2] = FindMinimalGreyDistance(greyPalette, greyImage[x, y + 2]);
+                    }
+
+                    if (x + 1 < imageWidth && y + 2 < imageHeight)
+                    {
+                        if (greyImage[x + 1, y + 2] + (int)(2 * (double)difference / 42) > 0 && greyImage[x + 1, y + 2] + (int)(2 * (double)difference / 42) <= 255) greyImage[x + 1, y + 2] = greyImage[x + 1, y + 2] + (int)(2 * (double)difference / 42);
+                        else greyImage[x + 1, y + 2] = FindMinimalGreyDistance(greyPalette, greyImage[x + 1, y + 2]);
+                    }
+
+
+
+
+                }
+            }
+
+            for (int x = 0; x < imageWidth; x++)
+            {
+                for (int y = 0; y < imageHeight; y++)
+                {
+                    outputImage.SetPixel(x, y, Color.FromArgb(greyImage[x, y], greyImage[x, y], greyImage[x, y]));
+                }
+            }
             return outputImage;
         }
 
@@ -304,15 +536,15 @@ namespace CG_02_Dithering
             return outputImage;
         }
 
-        private int[,,] MakeColorCube(Bitmap outputImage)
+        private int[,,] MakeColorCube(RGB[,] image)
         {
-            int[,,] cube = new int[64, 64, 64];
+            int[,,] cube = new int[256, 256, 256];
 
-            for (int i = 0; i < 64; i++)
+            for (int i = 0; i < 256; i++)
             {
-                for (int j = 0; j < 64; j++)
+                for (int j = 0; j < 256; j++)
                 {
-                    for (int k = 0; k < 64; k++)
+                    for (int k = 0; k < 256; k++)
                     {
                         cube[i, j, k] = 0;
                     }
@@ -323,8 +555,8 @@ namespace CG_02_Dithering
             {
                 for (int y = 0; y < imageHeight; y++)
                 {
-                    Color pixel = outputImage.GetPixel(x, y);
-                    cube[pixel.R / 4, pixel.G / 4, pixel.B / 4]++;
+
+                    cube[image[x,y].R, image[x, y].G, image[x, y].B]++;
                 }
             }
             return cube;
@@ -335,11 +567,11 @@ namespace CG_02_Dithering
             List<Vector> maxima = new List<Vector>();
 
 
-            for (int i = 0; i < 64; i++)
+            for (int i = 0; i < 256; i++)
             {
-                for (int j = 0; j < 64; j++)
+                for (int j = 0; j < 256; j++)
                 {
-                    for (int k = 0; k < 64; k++)
+                    for (int k = 0; k < 256; k++)
                     {
                         if (maxima.Count != K)
                         {
@@ -372,7 +604,7 @@ namespace CG_02_Dithering
 
             foreach (Vector vector in maxima)
             {
-                palette.Add(new RGB(vector.X * 4, vector.Y * 4, vector.Z * 4));
+                palette.Add(new RGB(vector.X, vector.Y, vector.Z));
             }
 
             return palette;
@@ -387,7 +619,7 @@ namespace CG_02_Dithering
             return (a * a + b * b + c * c);
         }
 
-        private RGB FindMinimalDistance(List<RGB> palette, Color color)
+        private RGB FindMinimalDistance(List<RGB> palette, RGB color)
         {
             double min = 3 * 256 * 256;
             RGB minimal = new RGB();
@@ -405,7 +637,8 @@ namespace CG_02_Dithering
 
         private Bitmap PopularityColorQuantization(Bitmap outputImage)
         {
-            int[,,] cube = MakeColorCube(outputImage);
+            RGB[,] imageInRGB = ConvertBitmapToRGB(outputImage);
+            int[,,] cube = MakeColorCube(imageInRGB);
             List<Vector> maxima = FindMaximaOfCube(cube);
             List<RGB> palette = MakePalette(maxima);
 
@@ -413,8 +646,7 @@ namespace CG_02_Dithering
             {
                 for (int y = 0; y < imageHeight; y++)
                 {
-                    Color pixel = outputImage.GetPixel(x, y);
-                    RGB newPixel = FindMinimalDistance(palette, pixel);
+                    RGB newPixel = FindMinimalDistance(palette, imageInRGB[x, y]);
 
                     outputImage.SetPixel(x, y, Color.FromArgb(newPixel.R, newPixel.G, newPixel.B));
                 }
@@ -568,8 +800,8 @@ namespace CG_02_Dithering
             {
                 for (int y = 0; y < imageHeight; y++)
                 {
-                    Color pixel = outputImage.GetPixel(x, y);
-                    RGB newPixel = FindMinimalDistance(palette, pixel);
+
+                    RGB newPixel = FindMinimalDistance(palette, imageInPixles[x,y]);
 
                     outputImage.SetPixel(x, y, Color.FromArgb(newPixel.R, newPixel.G, newPixel.B));
                 }

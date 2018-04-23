@@ -41,6 +41,13 @@ namespace CG_02_Dithering
             Z = z;
             Value = value;
         }
+        public Vector(Vector vector)
+        {
+            X = vector.X;
+            Y = vector.Y;
+            Z = vector.Z;
+            Value = vector.Value;
+        }
 
     }
     public class RGB
@@ -53,6 +60,13 @@ namespace CG_02_Dithering
             R = r;
             G = g;
             B = b;
+        }
+
+        public RGB(Vector vector)
+        {
+            R = vector.X;
+            G = vector.Y;
+            B = vector.Z;
         }
     }
     public class Centroid : RGB
@@ -560,10 +574,116 @@ namespace CG_02_Dithering
                 }
             }
             return cube;
-        }      
+        }
+
+        private Vector[,,] MakeColorCube2(RGB[,] image)
+        {
+            Vector[,,] cube = new Vector[256, 256, 256];
+
+            for (int i = 0; i < 256; i++)
+            {
+                for (int j = 0; j < 256; j++)
+                {
+                    for (int k = 0; k < 256; k++)
+                    {
+                        cube[i, j, k] =  new Vector(i, j, k, 0);
+                        //cube[i, j, k].X = i;
+                        //cube[i, j, k].Y = j;
+                        //cube[i, j, k].Z = k;
+
+                    }
+                }
+            }
+
+            for (int x = 0; x < imageWidth; x++)
+            {
+                for (int y = 0; y < imageHeight; y++)
+                {
+
+                    cube[image[x, y].R, image[x, y].G, image[x, y].B].Value++;
+                }
+            }
+            return cube;
+        }
+
+        private void QuickSort(Vector[] array, int left, int right)
+        {
+            var i = left;
+            var j = right;
+            var pivot = array[(left + right) / 2].Value;
+            while (i < j)
+            {
+                while (array[i].Value < pivot) i++;
+                while (array[j].Value > pivot) j--;
+                if (i <= j)
+                {
+                    // swap
+                    Vector tmp = new Vector(array[i]);
+                    array[i++] = new Vector(array[j]);  // ++ and -- inside array braces for shorter code
+                    array[j--] = new Vector(tmp);
+                }
+            }
+            if (left < j) QuickSort(array, left, j);
+            if (i < right) QuickSort(array, i, right);
+        }
+
+        private bool CheckIfElementExists(Vector[] array, int k)
+        {
+            bool exists = false;
+
+            for(int i = 0; i<K; i++)
+            {
+                if(array[i].Value == k)
+                {
+                    exists = true;
+                    break;
+                }
+            }
+
+            return exists;
+
+        }
+
+        private Vector[] FindMaximaOfCube2(Vector[,,] cube)
+        {
+            Vector[] maxima = new Vector[K];
+            for(int i = 0; i<K; i++)
+            {
+                maxima[i] = new Vector(0, 0, 0, 0);
+            }
+
+            for (int i = 0; i < 256; i++)
+            {
+                for (int j = 0; j < 256; j++)
+                {
+                    for (int k = 0; k < 256; k++)
+                    {
+                        int value = cube[i, j, k].Value;
+
+                        if (!CheckIfElementExists(maxima, value))
+                        {
+                            if (maxima[0].Value < value)
+                            {
+                                
+                                maxima[0].X = cube[i, j, k].X;
+                                maxima[0].Y = cube[i, j, k].Y;
+                                maxima[0].Z = cube[i, j, k].Z;
+                                maxima[0].Value = value;
+
+                                QuickSort(maxima, 0, K - 1);
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            return maxima;
+        }
 
         private List<Vector> FindMaximaOfCube(int[,,] cube)
         {
+           
             List<Vector> maxima = new List<Vector>();
 
 
@@ -610,6 +730,18 @@ namespace CG_02_Dithering
             return palette;
         }
 
+        private RGB[] MakePalette2(Vector[] maxima)
+        {
+            RGB[] palette = new RGB[K];
+
+            for(int i = 0; i<K; i++)
+            {
+                palette[i] = new RGB(maxima[i]);
+            }
+
+            return palette;
+        }
+
         private double DistanceBetweenColors(int x1, int x2, int x3, int y1, int y2, int y3)
         {
             int a = (x1 - y1);
@@ -635,18 +767,37 @@ namespace CG_02_Dithering
             return minimal;
         }
 
+        private RGB FindMinimalDistance2(RGB[] palette, RGB color)
+        {
+            double min = 3 * 256 * 256;
+            RGB minimal = new RGB();
+            foreach (RGB paletteColor in palette)
+            {
+                double distance = DistanceBetweenColors(paletteColor.R, paletteColor.G, paletteColor.B, color.R, color.G, color.B);
+                if (min > distance)
+                {
+                    min = distance;
+                    minimal = new RGB(paletteColor.R, paletteColor.G, paletteColor.B);
+                }
+            }
+            return minimal;
+        }
         private Bitmap PopularityColorQuantization(Bitmap outputImage)
         {
             RGB[,] imageInRGB = ConvertBitmapToRGB(outputImage);
-            int[,,] cube = MakeColorCube(imageInRGB);
-            List<Vector> maxima = FindMaximaOfCube(cube);
-            List<RGB> palette = MakePalette(maxima);
+            //int[,,] cube = MakeColorCube(imageInRGB);
+            //List<Vector> maxima = FindMaximaOfCube(cube);
+            //List<RGB> palette = MakePalette(maxima);
+
+            Vector[,,] cube = MakeColorCube2(imageInRGB);
+            Vector[] maxima = FindMaximaOfCube2(cube);
+            RGB[] palette = MakePalette2(maxima);
 
             for (int x = 0; x < imageWidth; x++)
             {
                 for (int y = 0; y < imageHeight; y++)
                 {
-                    RGB newPixel = FindMinimalDistance(palette, imageInRGB[x, y]);
+                    RGB newPixel = FindMinimalDistance2(palette, imageInRGB[x, y]);
 
                     outputImage.SetPixel(x, y, Color.FromArgb(newPixel.R, newPixel.G, newPixel.B));
                 }

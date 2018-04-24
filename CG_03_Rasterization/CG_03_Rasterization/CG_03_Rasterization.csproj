@@ -83,6 +83,7 @@
     <None Include="Resources\Editing-Line-icon.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\marker.png" />
     <Content Include="Resources\oval.png" />
     <None Include="Resources\reload.png" />
   </ItemGroup>

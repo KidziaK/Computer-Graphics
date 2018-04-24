@@ -12,7 +12,7 @@ namespace CG_03_Rasterization
 {
     public partial class Form1 : Form
     {
-        int dots = 0, radius = 1;
+        int dots = 0, radius = 50;
         public Form1()
         {
             InitializeComponent();
@@ -46,8 +46,14 @@ namespace CG_03_Rasterization
                 }
                 else
                 {
-                    DrawSymmetricLine(e.X, e.Y, ((Point)pictureBoxDrawArea.Tag).X, ((Point)pictureBoxDrawArea.Tag).Y, bitmap);
-                    
+                    if (checkBoxMarker.Checked == true)
+                    {
+                        WuLine(e.X, e.Y, ((Point)pictureBoxDrawArea.Tag).X, ((Point)pictureBoxDrawArea.Tag).Y, bitmap);
+                    }
+                    else
+                    {
+                        DrawSymmetricLine(e.X, e.Y, ((Point)pictureBoxDrawArea.Tag).X, ((Point)pictureBoxDrawArea.Tag).Y, bitmap);                      
+                    }
                     dots = 0;
 
                 }
@@ -55,8 +61,14 @@ namespace CG_03_Rasterization
 
             else if (checkBoxCircle.Checked == true)
             {
-                bitmap.SetPixel(e.X, e.Y, Color.Black);
-                MidpointCircle(e.X, e.Y, radius, bitmap);
+                if (checkBoxMarker.Checked == true)
+                {
+                    WuCircle(e.X, e.Y, radius, bitmap);
+                }
+                else
+                {
+                    MidpointCircle(e.X, e.Y, radius, bitmap);
+                }
             }
 
             pictureBoxDrawArea.Image = bitmap;
@@ -106,15 +118,21 @@ namespace CG_03_Rasterization
                 bitmap.SetPixel(xb, yb, Color.Black);
             }
         }
-
         void MidpointCircle(int x0, int y0, int R, Bitmap bitmap)
         {
             int dE = 3;
             int dSE = 5 - 2 * R;
             int d = 1 - R;
-            int x = x0;
-            int y = y0 + R;
-            bitmap.SetPixel(x, y, Color.Black);
+            int x = 0;
+            int y = R;
+            bitmap.SetPixel(x + x0, y + y0, Color.Black);
+            bitmap.SetPixel(x + x0, -y + y0, Color.Black);
+            bitmap.SetPixel(-x + x0, y + y0, Color.Black);
+            bitmap.SetPixel(-x + x0, -y + y0, Color.Black);
+            bitmap.SetPixel(y + x0, x + y0, Color.Black);
+            bitmap.SetPixel(y + x0, -x + y0, Color.Black);
+            bitmap.SetPixel(-y + x0, x + y0, Color.Black);
+            bitmap.SetPixel(-y + x0, -x + y0, Color.Black);
             while (y > x)
             {
                 if (d < 0) //move to E
@@ -131,8 +149,85 @@ namespace CG_03_Rasterization
                     --y;
                 }
                 ++x;
-                bitmap.SetPixel(x, y, Color.Black);
+                bitmap.SetPixel(x + x0, y + y0, Color.Black);
+                bitmap.SetPixel(x + x0, -y + y0, Color.Black);
+                bitmap.SetPixel(-x + x0, y + y0, Color.Black);
+                bitmap.SetPixel(-x + x0, -y + y0, Color.Black);
+                bitmap.SetPixel(y + x0, x + y0, Color.Black);
+                bitmap.SetPixel(y + x0, -x + y0, Color.Black);
+                bitmap.SetPixel(-y + x0, x + y0, Color.Black);
+                bitmap.SetPixel(-y + x0, -x + y0, Color.Black);
             }
         }
+        void WuLine(int x1, int y1, int x2, int y2, Bitmap bitmap)
+        {
+            float L = 0; /*Line color*/
+            float B = 200; /*Background Color*/
+            float m = ((float)y2 - (float)y1) / ((float)x2 - (float)x1);
+
+            if (x1 > x2)
+            {
+                int tempX = x1, tempY = y1;
+                x1 = x2;
+                y1 = y2;
+                x2 = tempX;
+                y2 = tempY;
+            }
+
+
+            int x;
+            float y = y1;
+            for (x = x1; x <= x2; ++x)
+            {
+                float c1 = L * (1 - modf(y)) + B * modf(y);
+                float c2 = L * modf(y) + B * (1 - modf(y));
+                bitmap.SetPixel(x, (int)y, Color.FromArgb((int)c1, (int)c1, (int)c1));
+                bitmap.SetPixel(x, (int)y + 1, Color.FromArgb((int)c2, (int)c2, (int)c2));
+                
+                y += m;
+            }
+        }        void WuCircle(int x0, int y0, int R, Bitmap bitmap)
+        {
+            int L = 0; /*Line color*/
+            int B = 200; /*Background Color*/
+            int x = R;
+            int y = 0;
+            bitmap.SetPixel(x + x0, y + y0, Color.FromArgb(L,L,L));
+            bitmap.SetPixel(x + x0, -y + y0, Color.FromArgb(L, L, L));
+            bitmap.SetPixel(-x + x0, y + y0, Color.FromArgb(L, L, L));
+            bitmap.SetPixel(-x + x0, -y + y0, Color.FromArgb(L, L, L));
+            bitmap.SetPixel(y + x0, x + y0, Color.FromArgb(L, L, L));
+            bitmap.SetPixel(y + x0, -x + y0, Color.FromArgb(L, L, L));
+            bitmap.SetPixel(-y + x0, x + y0, Color.FromArgb(L, L, L));
+            bitmap.SetPixel(-y + x0, -x + y0, Color.FromArgb(L, L, L));
+            while (x > y)
+            {
+                ++y;
+                x = (int)(Math.Sqrt(R * R - y * y)) + 1;
+                float T = (float)x - (float)(Math.Sqrt(R * R - y * y));
+                float c2 = L * (1 - T) + B * T;
+                float c1 = L * T + B * (1 - T);
+                bitmap.SetPixel(x + x0, y + y0, Color.FromArgb((int)c2, (int)c2, (int)c2));
+                bitmap.SetPixel(x + x0, -y + y0, Color.FromArgb((int)c2, (int)c2, (int)c2));
+                bitmap.SetPixel(-x + x0, y + y0, Color.FromArgb((int)c2, (int)c2, (int)c2));
+                bitmap.SetPixel(-x + x0, -y + y0, Color.FromArgb((int)c2, (int)c2, (int)c2));
+                bitmap.SetPixel(y + x0, x + y0, Color.FromArgb((int)c2, (int)c2, (int)c2));
+                bitmap.SetPixel(y + x0, -x + y0, Color.FromArgb((int)c2, (int)c2, (int)c2));
+                bitmap.SetPixel(-y + x0, x + y0, Color.FromArgb((int)c2, (int)c2, (int)c2));
+                bitmap.SetPixel(-y + x0, -x + y0, Color.FromArgb((int)c2, (int)c2, (int)c2));
+
+                bitmap.SetPixel(x - 1 + x0, y + y0, Color.FromArgb((int)c1, (int)c1, (int)c1));
+                bitmap.SetPixel(x - 1 + x0, -y + y0, Color.FromArgb((int)c1, (int)c1, (int)c1));
+                bitmap.SetPixel(-x + 1 + x0, y + y0, Color.FromArgb((int)c1, (int)c1, (int)c1));
+                bitmap.SetPixel(-x + 1 + x0, -y + y0, Color.FromArgb((int)c1, (int)c1, (int)c1));
+                bitmap.SetPixel(y - 1 + x0, x + y0, Color.FromArgb((int)c1, (int)c1, (int)c1));
+                bitmap.SetPixel(y - 1 + x0, -x + y0, Color.FromArgb((int)c1, (int)c1, (int)c1));
+                bitmap.SetPixel(-y + 1 + x0, x + y0, Color.FromArgb((int)c1, (int)c1, (int)c1));
+                bitmap.SetPixel(-y + 1 + x0, -x + y0, Color.FromArgb((int)c1, (int)c1, (int)c1));
+            }
+        }        float modf(float x)
+        {
+            return x - (int)x;
+        }
     }
 }

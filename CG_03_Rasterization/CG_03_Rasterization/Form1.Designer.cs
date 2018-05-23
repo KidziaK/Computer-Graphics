@@ -35,6 +35,8 @@
             this.checkBoxLine = new System.Windows.Forms.CheckBox();
             this.buttonRefresh = new System.Windows.Forms.Button();
             this.checkBoxMarker = new System.Windows.Forms.CheckBox();
+            this.checkBoxStar = new System.Windows.Forms.CheckBox();
+            this.checkBoxPen = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxDrawArea)).BeginInit();
@@ -58,20 +60,24 @@
             // 
             // tableLayoutPanel2
             // 
-            this.tableLayoutPanel2.ColumnCount = 4;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 54F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 1285F));
+            this.tableLayoutPanel2.ColumnCount = 6;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel2.Controls.Add(this.checkBoxCircle, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.checkBoxLine, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.buttonRefresh, 3, 0);
+            this.tableLayoutPanel2.Controls.Add(this.buttonRefresh, 5, 0);
             this.tableLayoutPanel2.Controls.Add(this.checkBoxMarker, 2, 0);
+            this.tableLayoutPanel2.Controls.Add(this.checkBoxStar, 4, 0);
+            this.tableLayoutPanel2.Controls.Add(this.checkBoxPen, 3, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(1449, 54);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
@@ -94,9 +100,9 @@
             this.checkBoxCircle.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.checkBoxCircle.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.checkBoxCircle.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.checkBoxCircle.Location = new System.Drawing.Point(58, 3);
+            this.checkBoxCircle.Location = new System.Drawing.Point(63, 3);
             this.checkBoxCircle.Name = "checkBoxCircle";
-            this.checkBoxCircle.Size = new System.Drawing.Size(49, 48);
+            this.checkBoxCircle.Size = new System.Drawing.Size(54, 48);
             this.checkBoxCircle.TabIndex = 2;
             this.checkBoxCircle.UseVisualStyleBackColor = true;
             this.checkBoxCircle.CheckedChanged += new System.EventHandler(this.checkBoxCircle_CheckedChanged);
@@ -110,7 +116,7 @@
             this.checkBoxLine.Dock = System.Windows.Forms.DockStyle.Fill;
             this.checkBoxLine.Location = new System.Drawing.Point(3, 3);
             this.checkBoxLine.Name = "checkBoxLine";
-            this.checkBoxLine.Size = new System.Drawing.Size(49, 48);
+            this.checkBoxLine.Size = new System.Drawing.Size(54, 48);
             this.checkBoxLine.TabIndex = 0;
             this.checkBoxLine.UseVisualStyleBackColor = true;
             this.checkBoxLine.CheckedChanged += new System.EventHandler(this.checkBoxLine_CheckedChanged);
@@ -119,7 +125,7 @@
             // 
             this.buttonRefresh.BackgroundImage = global::CG_03_Rasterization.Properties.Resources.reload;
             this.buttonRefresh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.buttonRefresh.Location = new System.Drawing.Point(167, 3);
+            this.buttonRefresh.Location = new System.Drawing.Point(303, 3);
             this.buttonRefresh.Name = "buttonRefresh";
             this.buttonRefresh.Size = new System.Drawing.Size(48, 48);
             this.buttonRefresh.TabIndex = 3;
@@ -132,11 +138,36 @@
             this.checkBoxMarker.BackgroundImage = global::CG_03_Rasterization.Properties.Resources.marker;
             this.checkBoxMarker.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.checkBoxMarker.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.checkBoxMarker.Location = new System.Drawing.Point(113, 3);
+            this.checkBoxMarker.Location = new System.Drawing.Point(123, 3);
             this.checkBoxMarker.Name = "checkBoxMarker";
-            this.checkBoxMarker.Size = new System.Drawing.Size(48, 48);
+            this.checkBoxMarker.Size = new System.Drawing.Size(54, 48);
             this.checkBoxMarker.TabIndex = 4;
             this.checkBoxMarker.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxStar
+            // 
+            this.checkBoxStar.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBoxStar.BackgroundImage = global::CG_03_Rasterization.Properties.Resources.star;
+            this.checkBoxStar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.checkBoxStar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.checkBoxStar.Location = new System.Drawing.Point(243, 3);
+            this.checkBoxStar.Name = "checkBoxStar";
+            this.checkBoxStar.Size = new System.Drawing.Size(54, 48);
+            this.checkBoxStar.TabIndex = 5;
+            this.checkBoxStar.UseVisualStyleBackColor = true;
+            this.checkBoxStar.CheckedChanged += new System.EventHandler(this.checkBoxStar_CheckedChanged);
+            // 
+            // checkBoxPen
+            // 
+            this.checkBoxPen.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBoxPen.BackgroundImage = global::CG_03_Rasterization.Properties.Resources.pen;
+            this.checkBoxPen.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.checkBoxPen.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.checkBoxPen.Location = new System.Drawing.Point(183, 3);
+            this.checkBoxPen.Name = "checkBoxPen";
+            this.checkBoxPen.Size = new System.Drawing.Size(54, 48);
+            this.checkBoxPen.TabIndex = 6;
+            this.checkBoxPen.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -162,6 +193,8 @@
         private System.Windows.Forms.CheckBox checkBoxLine;
         private System.Windows.Forms.Button buttonRefresh;
         private System.Windows.Forms.CheckBox checkBoxMarker;
+        private System.Windows.Forms.CheckBox checkBoxStar;
+        private System.Windows.Forms.CheckBox checkBoxPen;
     }
 }
 

@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{548850A6-744E-401F-9283-5874F151EBCB}</ProjectGuid>
+    <ProjectGuid>{C2BDB722-DD55-4F7C-B4AF-3A3DC1DEDCCF}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>CG_03_Rasterization</RootNamespace>
-    <AssemblyName>CG_03_Rasterization</AssemblyName>
+    <RootNamespace>CG_04_ClippingAndFilling</RootNamespace>
+    <AssemblyName>CG_04_ClippingAndFilling</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -64,7 +64,6 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -78,16 +77,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Editing-Line-icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\star.png" />
-    <None Include="Resources\pen.png" />
-    <None Include="Resources\marker.png" />
-    <Content Include="Resources\oval.png" />
-    <None Include="Resources\reload.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

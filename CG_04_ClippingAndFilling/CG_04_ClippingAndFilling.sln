@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.15
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CG_04_ClippingAndFilling", "CG_04_ClippingAndFilling\CG_04_ClippingAndFilling.csproj", "{C2BDB722-DD55-4F7C-B4AF-3A3DC1DEDCCF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C2BDB722-DD55-4F7C-B4AF-3A3DC1DEDCCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2BDB722-DD55-4F7C-B4AF-3A3DC1DEDCCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2BDB722-DD55-4F7C-B4AF-3A3DC1DEDCCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2BDB722-DD55-4F7C-B4AF-3A3DC1DEDCCF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {77D4F0FC-EA06-4CB9-8514-DA39C80191E9}
+	EndGlobalSection
+EndGlobal

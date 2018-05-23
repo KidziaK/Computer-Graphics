@@ -12,25 +12,22 @@ namespace CG_03_Rasterization
 {
     public partial class Form1 : Form
     {
-        int dots = 0, radius = 50;
+        int dots = 0, radius = 50, thickness = 3;
         public Form1()
         {
             InitializeComponent();
             pictureBoxDrawArea.Image = new Bitmap(pictureBoxDrawArea.Width, pictureBoxDrawArea.Height);
         }
-
         private void checkBoxCircle_CheckedChanged(object sender, EventArgs e)
         {
             checkBoxLine.Checked = false;
             dots = 0;
         }
-
         private void checkBoxLine_CheckedChanged(object sender, EventArgs e)
         {
             checkBoxCircle.Checked = false;
             dots = 0;
         }
-
         private void pictureBoxDrawArea_MouseUp(object sender, MouseEventArgs e)
         {
             Bitmap bitmap = new Bitmap(pictureBoxDrawArea.Image);
@@ -50,9 +47,13 @@ namespace CG_03_Rasterization
                     {
                         WuLine(e.X, e.Y, ((Point)pictureBoxDrawArea.Tag).X, ((Point)pictureBoxDrawArea.Tag).Y, bitmap);
                     }
+                    else if (checkBoxStar.Checked == true)
+                    {
+                        SuperSampling(e.X, e.Y, ((Point)pictureBoxDrawArea.Tag).X, ((Point)pictureBoxDrawArea.Tag).Y, bitmap);
+                    }
                     else
                     {
-                        DrawSymmetricLine(e.X, e.Y, ((Point)pictureBoxDrawArea.Tag).X, ((Point)pictureBoxDrawArea.Tag).Y, bitmap);                      
+                        DrawSymmetricLine(e.X, e.Y, ((Point)pictureBoxDrawArea.Tag).X, ((Point)pictureBoxDrawArea.Tag).Y, bitmap);
                     }
                     dots = 0;
 
@@ -71,51 +72,92 @@ namespace CG_03_Rasterization
                 }
             }
 
+            
+
             pictureBoxDrawArea.Image = bitmap;
         }
-        
-
-
-    
-
+        private void SuperSampling(int x1, int y1, int x2, int y2, Bitmap bitmap)
+        {
+           
+        }
         private void buttonRefresh_Click(object sender, EventArgs e)
         {
             pictureBoxDrawArea.Image = new Bitmap(pictureBoxDrawArea.Width, pictureBoxDrawArea.Height);
         }
-
         private void DrawSymmetricLine(int x1, int y1, int x2, int y2, Bitmap bitmap)
         {
-            if(x1 > x2)
+
+            if (x1 > x2)
             {
-                int tempX = x1, tempY = y1;
+                int temp = x1;
                 x1 = x2;
+                x2 = temp;
+                temp = y1;
                 y1 = y2;
-                x2 = tempX;
-                y2 = tempY;
+                y2 = temp;
             }
 
+            bool flag = false;
+            if (y1 < y2) flag = true;
+
             int dx = x2 - x1;
-            int dy = y2 - y1;
+            int dy = Math.Abs(y2 - y1);
             int d = 2 * dy - dx;
             int dE = 2 * dy;
             int dNE = 2 * (dy - dx);
-            int xf = x1, yf = y1;
-            int xb = x2, yb = y2;
-            bitmap.SetPixel(xf, yf, Color.Black);
-            bitmap.SetPixel(xb, yb, Color.Black);
-            while (xf < xb)
+
+            if (checkBoxPen.Checked == true)
             {
-                ++xf; --xb;
+                DrawBall(x1, y1, bitmap);
+                DrawBall(x2, y2, bitmap);
+            }
+
+            bitmap.SetPixel(x1, y1, Color.Black);
+            bitmap.SetPixel(x2, y2, Color.Black);
+            while (x1 < x2)
+            {
+                ++x1; --x2;
                 if (d < 0)
+                {
                     d += dE;
+                }
                 else
                 {
+
                     d += dNE;
-                    ++yf;
-                    --yb;
+
+                    if (flag)
+                    {
+                        ++y1;
+                        --y2;
+                    }
+                    else
+                    {
+                        ++y2;
+                        --y1;
+                    }
+
+
+
                 }
-                bitmap.SetPixel(xf, yf, Color.Black);
-                bitmap.SetPixel(xb, yb, Color.Black);
+
+                if (checkBoxPen.Checked == true)
+                {
+                    DrawBall(x1, y1, bitmap);
+                    DrawBall(x2, y2, bitmap);
+                }
+                bitmap.SetPixel(x1, y1, Color.Black);
+                bitmap.SetPixel(x2, y2, Color.Black);
+            }
+
+
+        }
+
+        private void DrawBall(int x, int y, Bitmap bitmap)
+        {
+            for(int i = 1; i<thickness; i++)
+            {
+                MidpointCircle(x, y, thickness, bitmap);
             }
         }
         void MidpointCircle(int x0, int y0, int R, Bitmap bitmap)
@@ -225,7 +267,15 @@ namespace CG_03_Rasterization
                 bitmap.SetPixel(-y + 1 + x0, x + y0, Color.FromArgb((int)c1, (int)c1, (int)c1));
                 bitmap.SetPixel(-y + 1 + x0, -x + y0, Color.FromArgb((int)c1, (int)c1, (int)c1));
             }
-        }        float modf(float x)
+        }
+        private void checkBoxStar_CheckedChanged(object sender, EventArgs e)
+        {
+            checkBoxCircle.Checked = false;
+            checkBoxLine.Checked = false;
+            checkBoxMarker.Checked = false;
+            checkBoxPen.Checked = false;
+        }
+        float modf(float x)
         {
             return x - (int)x;
         }

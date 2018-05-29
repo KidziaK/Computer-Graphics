@@ -312,6 +312,21 @@ namespace CG_04_ClippingAndFilling
             pictureBoxDrawingArea.Refresh();
         }
 
+        public void DrawRectangle()
+        {
+            Graphics g = Graphics.FromImage(pictureBoxDrawingArea.Image);
+
+            
+           g.DrawLine(Pens.Black, pointA, new Point(pointB.X, pointA.Y));
+            g.DrawLine(Pens.Black, pointA, new Point(pointA.X, pointB.Y));
+            g.DrawLine(Pens.Black, pointB, new Point(pointB.X, pointA.Y));
+            g.DrawLine(Pens.Black, pointA, new Point(pointB.X, pointA.Y));
+
+
+            g.Dispose();
+            pictureBoxDrawingArea.Refresh();
+        }
+
         /// <summary>
         /// Swap two variables
         /// </summary>
@@ -479,12 +494,7 @@ namespace CG_04_ClippingAndFilling
                     x++;
                     if(x == (int)active[count].x)
                     {
-                        if(even)parity = !parity;
-                        else
-                        {
-
-                        }
-                      
+                        if(even)parity = !parity;                    
                         count++;
                     }
                 }
@@ -501,11 +511,11 @@ namespace CG_04_ClippingAndFilling
                     edge.x = edge.x + edge.m_1;
                 }
 
-                pictureBoxDrawingArea.Image = image;
-                pictureBoxDrawingArea.Refresh();
+                
 
             }
-            
+            pictureBoxDrawingArea.Image = image;
+            pictureBoxDrawingArea.Refresh();
 
         }    
 

@@ -312,6 +312,119 @@ namespace CG_04_ClippingAndFilling
             pictureBoxDrawingArea.Refresh();
         }
 
+        /// <summary>
+        /// Swap two variables
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        public void Swap<T>(ref T a, ref T b)
+        {
+            T temp = a;
+            a = b;
+            b = temp;
+        }
+
+        /// <summary>
+        /// Creates global Edge Table
+        /// </summary>
+        /// <param name="edges"></param>
+        /// <returns></returns>
+        public List<Edge> MakeGET(List<Edge> edges)
+        {
+            List<Edge> ordered = edges.OrderBy(min => min.ymin).ThenBy(max => max.ymax).ThenBy(p => p.x).ToList();
+            ordered.RemoveAll(a => a.m_1 == Int32.MaxValue);
+            return ordered;
+        }
+
+
+        /// <summary>
+        /// Creates standard edge table
+        /// </summary>
+        /// <param name="points"></param>
+        /// <returns></returns>
+        public List<Edge> MakeET(List<Point> points)
+        {
+            int len = points.Count;
+            List<Edge> edges = new List<Edge>();
+
+            for (int i = 0; i < len - 1; i++)
+            {
+                int _ymin, _ymax;
+                float _m, _x;
+                int _y1 = points[i].Y;
+                int _y2 = points[i + 1].Y;
+                int _x1 = points[i].X;
+                int _x2 = points[i + 1].X;
+
+                if (_y2 > _y1)
+                {
+                    _ymax = _y2;
+                    _ymin = _y1;
+                    _x = _x1;
+                }
+                else
+                {
+                    _ymax = _y1;
+                    _ymin = _y2;
+                    _x = _x2;
+                }
+
+                //_x = min(_x1, _x2);
+
+                _m = (float)((float)(_x2 - _x1) / (float)(_y2 - _y1));
+
+                //if (_m < 0 && _x == _x1) _x = _x2;
+                //else if (_m < 0 && _x == _x2) _x = _x1;
+
+                if ((_y2 - _y1) != 0)
+                {
+                    edges.Add(new Edge(_ymin, _ymax, _x, _m));
+
+                }
+                else
+                {
+                    edges.Add(new Edge(_ymin, _ymax, _x, Int32.MaxValue));
+                }
+
+
+            }
+
+            int ymin, ymax;
+            float x, m;
+            int y1 = points[len - 1].Y;
+            int y2 = points[0].Y;
+            int x1 = points[len - 1].X;
+            int x2 = points[0].X;
+
+            if (y2 > y1)
+            {
+                ymax = y2;
+                ymin = y1;
+                x = x1;
+            }
+            else
+            {
+                ymax = y1;
+                ymin = y2;
+                x = x2;
+            }
+
+            m = (float)((float)(x2 - x1) / (float)(y2 - y1));
+
+
+            if ((y2 - y1) != 0)
+            {
+                edges.Add(new Edge(ymin, ymax, x, m));
+            }
+            else
+            {
+                edges.Add(new Edge(ymin, ymax, x, Int32.MaxValue));
+            }
+            return edges;
+
+        }
+
         #endregion
 
         #region Buttons
@@ -394,115 +507,7 @@ namespace CG_04_ClippingAndFilling
             }
             
 
-        }
-
-        public List<Edge> MakeAET(List<Edge> edges)
-        {
-            List<Edge> AET = new List<Edge>();
-
-
-            return AET;
-        }
-
-        public List<Edge> MakeGET(List<Edge> edges)
-        {
-            List<Edge> ordered = edges.OrderBy(min => min.ymin).ThenBy(max => max.ymax).ThenBy(p => p.x).ToList();
-            ordered.RemoveAll(a => a.m_1 == Int32.MaxValue);
-            return ordered;
-        }
-
-        public void Swap<T>(ref T a, ref T b)
-        {
-            T temp = a;
-            a = b;
-            b = temp;
-        }
-
-        public List<Edge> MakeET(List<Point> points)
-        {
-            int len = points.Count;
-            List<Edge> edges = new List<Edge>();
-
-            for (int i = 0; i < len - 1; i++)
-            {
-                int _ymin, _ymax;
-                float _m, _x;
-                int _y1 = points[i].Y;
-                int _y2 = points[i + 1].Y;
-                int _x1 = points[i].X;
-                int _x2 = points[i + 1].X;
-
-                if(_y2 > _y1)
-                {
-                    _ymax = _y2;
-                    _ymin = _y1;
-                    _x = _x1;
-                }              
-                else
-                {
-                    _ymax = _y1;
-                    _ymin = _y2;
-                    _x = _x2;
-                }
-
-                //_x = min(_x1, _x2);
-
-                _m = (float)((float)(_x2 - _x1) / (float)(_y2 - _y1));
-
-                //if (_m < 0 && _x == _x1) _x = _x2;
-                //else if (_m < 0 && _x == _x2) _x = _x1;
-
-                if ((_y2 - _y1) != 0)
-                {
-                    edges.Add(new Edge(_ymin, _ymax, _x, _m));
-
-                }
-                else
-                {
-                    edges.Add(new Edge(_ymin, _ymax, _x, Int32.MaxValue));
-                }
-
-
-            }
-
-            int ymin, ymax;
-            float x, m;
-            int y1 = points[len - 1].Y;
-            int y2 = points[0].Y;
-            int x1 = points[len - 1].X;
-            int x2 = points[0].X;
-
-            if (y2 > y1)
-            {
-                ymax = y2;
-                ymin = y1;
-                x = x1;
-            }
-            else
-            {
-                ymax = y1;
-                ymin = y2;
-                x = x2;
-            }
-
-            //x = min(x1, x2);
-
-            m = (float)((float)(x2 - x1) / (float)(y2 - y1));
-
-            //if (m < 0 && x == x1) x = x2;
-            //else if (m < 0 && x == x2) x = x1;
-
-            if ((y2 - y1) != 0)
-            {
-                edges.Add(new Edge(ymin, ymax, x, m));
-            }
-            else
-            {
-                edges.Add(new Edge(ymin, ymax, x, Int32.MaxValue));
-            }
-            return edges;
-
-        }
+        }    
 
         /// <summary>
         /// Clear Drawing Area

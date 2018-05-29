@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace CG_04_ClippingAndFilling
 {
@@ -14,6 +14,7 @@ namespace CG_04_ClippingAndFilling
 
         // End points for Drawing a line
         public Point pointA, pointB;
+
         // Set of 4 values defining edges of the rectangle
         public Rectangle rectangle = new Rectangle();
 
@@ -27,8 +28,8 @@ namespace CG_04_ClippingAndFilling
             public int top;
         }
 
-        // Strucutre storing 2 points representing lines
-        public struct Line
+        // Line Class
+        public class Line
         {
             public Point A;
             public Point B;
@@ -40,11 +41,27 @@ namespace CG_04_ClippingAndFilling
             }
         }
 
+        // Egde Class
+        public class Edge
+        {
+            public int ymin;
+            public int ymax;
+            public float x;
+            public float m_1;
+
+            public Edge(int _ymin, int _ymax, float _x, float _m_1)
+            {
+                ymin = _ymin;
+                ymax = _ymax;
+                x = _x;
+                m_1 = _m_1;
+            }
+        }
+
+
         // List of all lines
         public List<Line> lines = new List<Line>();
 
-        // Active edge table implementation
-        List<Line> AET = new List<Line>();
 
         // Intersected Points
         List<Point> ListOfIntersectPoints = new List<Point>();
@@ -275,6 +292,26 @@ namespace CG_04_ClippingAndFilling
             checkBoxLineDrawing.Checked = false;
         }
 
+        /// <summary>
+        /// Draw a polygon selected by user
+        /// </summary>
+        public void DrawPoly()
+        {
+            Graphics g = Graphics.FromImage(pictureBoxDrawingArea.Image);
+
+            int len = polygon.Count - 1;
+            
+            for (int i = 0; i<len; i++)
+            {
+                g.DrawLine(Pens.Black, polygon[i], polygon[i+1]);
+            }
+
+            g.DrawLine(Pens.Black, polygon[len], polygon[0]);
+
+            g.Dispose();
+            pictureBoxDrawingArea.Refresh();
+        }
+
         #endregion
 
         #region Buttons
@@ -283,71 +320,188 @@ namespace CG_04_ClippingAndFilling
         /// </summary>
         private void buttonFill_Click(object sender, System.EventArgs e)
         {
-            int edgesSize = AET.Count;
-            for (int i = point_ymin; i <= point_ymax; i++)
+
+            DrawPoly();
+
+            Bitmap image = new Bitmap(pictureBoxDrawingArea.Image);
+            List<Edge> edges = MakeET(polygon);
+            List<Edge> global = MakeGET(edges);
+            int y = global[0].ymin;
+            List<Edge> active = new List<Edge>();
+            bool even = true;
+            int oldedgenumber = 0 , newedgenumber = 0;
+            while (active.Any() || global.Any())
             {
-                int intersectX = 0;// co tu zadeklarowac
-                for (int j = 0; j < edgesSize; j++)
+                //move bucket ET[y] to AET
+                foreach(Edge edge in global)
                 {
-                    if (findIntersectPoint(AET[j].A.X, AET[j].A.Y, AET[j].B.X, AET[j].B.Y, i, ref intersectX))
+                    if (edge.ymin == y) active.Add(edge);
+                }
+
+                foreach (Edge edge in active)
+                {
+                    if(global.Contains(edge))global.Remove(edge);
+                }
+
+
+                // sort AET by x value
+                active = active.OrderBy(ed => ed.x).ToList();
+
+
+                newedgenumber = active.Count;
+                if (!even) even = true;
+                if (newedgenumber != oldedgenumber && oldedgenumber != 0) even = false;
+                int count = 0;
+                int x = (int)active[count].x;               
+                count++;
+
+                bool parity = true;
+
+                //fill pixels between pairs of intersections
+                while(x<=active[active.Count - 1].x)
+                {
+                    if (parity) image.SetPixel(x, y, Color.Black);
+                    if (count == active.Count) break;
+                    
+                    x++;
+                    if(x == (int)active[count].x)
                     {
-                        Point p = new Point(intersectX, i);
-                        if (AET[j].A.Y > AET[j].B.Y)
-                        {
-                            if (p.Y == AET[j].A.Y)
-                                continue;
-                        }
+                        if(even)parity = !parity;
                         else
-                            if (AET[j].A.Y < AET[j].B.Y)
                         {
-                            if (p.Y == AET[j].B.Y)
-                                continue;
+
                         }
-                        ListOfIntersectPoints.Add(p);
+                      
+                        count++;
                     }
                 }
-                int intersectSize = ListOfIntersectPoints.Count;
-                Point swap = new Point(0, 0);
-                for (int k = 0; k < intersectSize - 1; k++)
-                    for (int j = k + 1; j < intersectSize; j++)
-                    {
-                        if (ListOfIntersectPoints[k].X > ListOfIntersectPoints[j].X)
-                        {
-                            swap = ListOfIntersectPoints[k];
-                            ListOfIntersectPoints[k] = ListOfIntersectPoints[j];
-                            ListOfIntersectPoints[j] = swap;
-                        }
-                    }
-                int intersectPointsSize = ListOfIntersectPoints.Count;
-                for (int j = 1; j < intersectPointsSize; j += 2)
+
+                oldedgenumber = newedgenumber;
+                 ++y;
+
+                //remove from AET edges for which ymax = y
+                active.RemoveAll(a => a.ymax == y);
+
+
+                foreach (Edge edge in active)
                 {
+                    edge.x = edge.x + edge.m_1;
+                }
 
-                    //glBegin(GL_LINES);
-                    //glVertex2i(ListOfIntersectPoints.at(j - 1).x, ListOfIntersectPoints.at(j - 1).y);
-                    //glVertex2i(ListOfIntersectPoints.at(j).x, ListOfIntersectPoints.at(j).y);
-                    //glEnd();
+                pictureBoxDrawingArea.Image = image;
+                pictureBoxDrawingArea.Refresh();
+
+            }
+            
+
+        }
+
+        public List<Edge> MakeAET(List<Edge> edges)
+        {
+            List<Edge> AET = new List<Edge>();
+
+
+            return AET;
+        }
+
+        public List<Edge> MakeGET(List<Edge> edges)
+        {
+            List<Edge> ordered = edges.OrderBy(min => min.ymin).ThenBy(max => max.ymax).ThenBy(p => p.x).ToList();
+            ordered.RemoveAll(a => a.m_1 == Int32.MaxValue);
+            return ordered;
+        }
+
+        public void Swap<T>(ref T a, ref T b)
+        {
+            T temp = a;
+            a = b;
+            b = temp;
+        }
+
+        public List<Edge> MakeET(List<Point> points)
+        {
+            int len = points.Count;
+            List<Edge> edges = new List<Edge>();
+
+            for (int i = 0; i < len - 1; i++)
+            {
+                int _ymin, _ymax;
+                float _m, _x;
+                int _y1 = points[i].Y;
+                int _y2 = points[i + 1].Y;
+                int _x1 = points[i].X;
+                int _x2 = points[i + 1].X;
+
+                if(_y2 > _y1)
+                {
+                    _ymax = _y2;
+                    _ymin = _y1;
+                    _x = _x1;
+                }              
+                else
+                {
+                    _ymax = _y1;
+                    _ymin = _y2;
+                    _x = _x2;
+                }
+
+                //_x = min(_x1, _x2);
+
+                _m = (float)((float)(_x2 - _x1) / (float)(_y2 - _y1));
+
+                //if (_m < 0 && _x == _x1) _x = _x2;
+                //else if (_m < 0 && _x == _x2) _x = _x1;
+
+                if ((_y2 - _y1) != 0)
+                {
+                    edges.Add(new Edge(_ymin, _ymax, _x, _m));
 
                 }
-                ListOfIntersectPoints.Clear();
-            }
-        }
-        bool findIntersectPoint(int x1, int y1, int x2, int y2, int y, ref int x)
-        {
-            if (y2 == y1)
-                return false;
-            x = (x2 - x1) * (y - y1) / (y2 - y1) + x1;
-            bool isInsideEdgeX;
-            bool isInsideEdgeY;
-            if (x1 < x2)
-                isInsideEdgeX = (x1 <= x) && (x <= x2);
-            else
-                isInsideEdgeX = (x2 <= x) && (x <= x1);
+                else
+                {
+                    edges.Add(new Edge(_ymin, _ymax, _x, Int32.MaxValue));
+                }
 
-            if (y1 < y2)
-                isInsideEdgeY = (y1 <= y) && (y <= y2);
+
+            }
+
+            int ymin, ymax;
+            float x, m;
+            int y1 = points[len - 1].Y;
+            int y2 = points[0].Y;
+            int x1 = points[len - 1].X;
+            int x2 = points[0].X;
+
+            if (y2 > y1)
+            {
+                ymax = y2;
+                ymin = y1;
+                x = x1;
+            }
             else
-                isInsideEdgeY = (y2 <= y) && (y <= y1);
-            return isInsideEdgeX && isInsideEdgeY;
+            {
+                ymax = y1;
+                ymin = y2;
+                x = x2;
+            }
+
+            //x = min(x1, x2);
+
+            m = (float)((float)(x2 - x1) / (float)(y2 - y1));
+
+            //if (m < 0 && x == x1) x = x2;
+            //else if (m < 0 && x == x2) x = x1;
+
+            if ((y2 - y1) != 0)
+            {
+                edges.Add(new Edge(ymin, ymax, x, m));
+            }
+            else
+            {
+                edges.Add(new Edge(ymin, ymax, x, Int32.MaxValue));
+            }
+            return edges;
+
         }
 
         /// <summary>

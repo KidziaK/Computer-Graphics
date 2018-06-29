@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CG_03_Rasterization
@@ -152,7 +146,6 @@ namespace CG_03_Rasterization
 
 
         }
-
         private void DrawBall(int x, int y, Bitmap bitmap)
         {
             for(int i = 1; i<thickness; i++)
@@ -228,7 +221,8 @@ namespace CG_03_Rasterization
                 
                 y += m;
             }
-        }        void WuCircle(int x0, int y0, int R, Bitmap bitmap)
+        }
+        void WuCircle(int x0, int y0, int R, Bitmap bitmap)
         {
             int L = 0; /*Line color*/
             int B = 200; /*Background Color*/
@@ -278,6 +272,6 @@ namespace CG_03_Rasterization
         float modf(float x)
         {
             return x - (int)x;
-        }
+        }
     }
 }

@@ -122,62 +122,40 @@ namespace _3DTestWPF
         private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             switch(e.Key)
-            {
-                case System.Windows.Input.Key.Up:
+            { 
+            
+                case System.Windows.Input.Key.Right:
                     lock(camera)
                     {
-                        camera.Target += new Vector3(0, 0.1f, 0);
-                    }
-                    break;
-
-                case System.Windows.Input.Key.Down:
-                    lock (camera)
-                    {                       
-                        camera.Target += new Vector3(0, -0.1f, 0);
+                        var rotationMatrix = Matrix.RotationYawPitchRoll(0.5f, 0, 0);
+                        camera.Position = Vector3.TransformCoordinate(camera.Position, rotationMatrix);
                     }
                     break;
 
                 case System.Windows.Input.Key.Left:
                     lock (camera)
                     {
-                        camera.Target += new Vector3(0.1f, 0, 0);
+                        var rotationMatrix = Matrix.RotationYawPitchRoll(-0.5f, 0, 0);
+                        camera.Position = Vector3.TransformCoordinate(camera.Position, rotationMatrix);
                     }
                     break;
 
-                case System.Windows.Input.Key.Right:
+                case System.Windows.Input.Key.Down:
                     lock (camera)
                     {
-                        camera.Target += new Vector3(-0.1f, 0, 0);
+                        var rotationMatrix = Matrix.RotationYawPitchRoll(0, -0.5f, 0);
+                        camera.Position = Vector3.TransformCoordinate(camera.Position, rotationMatrix);
                     }
                     break;
 
-                case System.Windows.Input.Key.A:
+                case System.Windows.Input.Key.Up:
                     lock (camera)
                     {
-                        camera.Position += new Vector3(0.1f, 0, -0.1f);
+                        var rotationMatrix = Matrix.RotationYawPitchRoll(0, 0.5f, 0);
+                        camera.Position = Vector3.TransformCoordinate(camera.Position, rotationMatrix);
                     }
                     break;
 
-                case System.Windows.Input.Key.W:
-                    lock (camera)
-                    {
-                        camera.Position += new Vector3(0, -0.1f, 0.1f);
-                    }
-                    break;
-
-                case System.Windows.Input.Key.S:
-                    lock (camera)
-                    {
-                        camera.Position += new Vector3(0, 0.1f, -0.1f);
-                    }
-                    break;
-
-                case System.Windows.Input.Key.D:
-                    lock (camera)
-                    {
-                        camera.Position += new Vector3(-0.1f, 0, 0.1f);
-                    }
-                    break;
             }
         }
     }

@@ -6,9 +6,6 @@ using System.Security.Cryptography;
 
 namespace _3DTestWPF
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         static int n = 10;

@@ -28,8 +28,6 @@ namespace _3DTestWPF
             bitmap.CopyPixels(internalBuffer, stride, 0);
         }
 
-        // Takes the U & V coordinates exported by Blender
-        // and return the corresponding pixel color in the texture
         public Color4 Map(float tu, float tv)
         {
             // Image is not loaded yet

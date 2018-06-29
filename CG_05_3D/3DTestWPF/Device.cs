@@ -398,7 +398,6 @@ namespace _3DTestWPF
 
             foreach (Mesh mesh in meshes)
             {
-                // Beware to apply rotation before translation 
                 var worldMatrix = Matrix.RotationYawPitchRoll(mesh.Rotation.Y, mesh.Rotation.X, mesh.Rotation.Z) * Matrix.Translation(mesh.Position);
 
                 var worldView = worldMatrix * viewMatrix;
@@ -406,8 +405,6 @@ namespace _3DTestWPF
 
                 foreach (var face in mesh.Faces)
                 {
-
-
                     // Render this face
                     var vertexA = mesh.Vertices[face.A];
                     var vertexB = mesh.Vertices[face.B];

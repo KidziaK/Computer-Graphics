@@ -20,7 +20,7 @@ namespace _3DTestWPF
         public void Load(string filename)
         {
             
-            BitmapImage bitmap = new BitmapImage(new Uri("pattern.jpg", UriKind.Relative));
+            BitmapImage bitmap = new BitmapImage(new Uri("pattern2.jpg", UriKind.Relative));
             WriteableBitmap writeableBitmap = new WriteableBitmap(bitmap);
 
             int stride = bitmap.PixelWidth * bitmap.Format.BitsPerPixel / 8;

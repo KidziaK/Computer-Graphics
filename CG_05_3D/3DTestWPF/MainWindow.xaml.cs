@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Security.Cryptography;
 
 namespace _3DTestWPF
 {
@@ -10,7 +11,7 @@ namespace _3DTestWPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        static int n = 20;
+        static int n = 10;
         static float h = 1.5f;
         static float r = 0.3f;
         private Device device;
@@ -90,16 +91,18 @@ namespace _3DTestWPF
             mesh.Faces[3 * n - 1] = new Face { A = 3 * n, B = n + 1, C = 2 * n + 1 };
 
 
+
             for(int i = 0; i <= 4*n + 1; i++)
             {
-                Random rand = new Random();
-                mesh.Vertices[i].TextureCoordinates = new Vector2(10, 5);
+              
+
+                mesh.Vertices[i].TextureCoordinates = new Vector2(294 / n * i, 171 / n * i);
             }
 
             camera.Position = new Vector3(0, 0, 10.0f);
             camera.Target = new Vector3(0, 0, 0);
 
-            mesh.Texture = new Texture("pattern", 512, 512);
+            mesh.Texture = new Texture("pattern", 294, 171);
 
             CompositionTarget.Rendering += CompositionTarget_Rendering;
         }

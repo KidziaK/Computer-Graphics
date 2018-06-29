@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace _3DTestWPF
@@ -23,9 +19,13 @@ namespace _3DTestWPF
 
         public void Load(string filename)
         {
+            
             BitmapImage bitmap = new BitmapImage(new Uri("pattern.jpg", UriKind.Relative));
             WriteableBitmap writeableBitmap = new WriteableBitmap(bitmap);
-            bitmap.CopyPixels(internalBuffer, width * 4, 0);
+
+            int stride = bitmap.PixelWidth * bitmap.Format.BitsPerPixel / 8;
+            internalBuffer = new byte[stride * bitmap.PixelHeight];
+            bitmap.CopyPixels(internalBuffer, stride, 0);
         }
 
         // Takes the U & V coordinates exported by Blender

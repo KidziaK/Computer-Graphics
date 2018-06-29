@@ -56,7 +56,6 @@
     </ApplicationDefinition>
     <Compile Include="Color4.cs" />
     <Compile Include="Face.cs" />
-    <Compile Include="Material.cs" />
     <Compile Include="Matrix.cs" />
     <Compile Include="Quaternion.cs" />
     <Compile Include="ScanLineData.cs" />

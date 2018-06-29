@@ -28,11 +28,15 @@ namespace _3DTestWPF
 
             frontBuffer.Source = bmp;
 
+            for(int i = 0; i <= n; i++)
+            {
+                mesh.Vertices[i].Normal = new Vector3(0, 1, 0);
+            }
 
-            mesh.Vertices[0] = new Vector3(0, h, 0);
+            mesh.Vertices[0].Coordinates = new Vector3(0, h, 0);
             for(int i = 1; i<=n; i++)
             {
-                mesh.Vertices[i] = new Vector3((float)(r * Math.Cos(2 * Math.PI / n * (i - 1))), h, (float)(r * Math.Sin(2 * Math.PI / n * (i - 1))));
+                mesh.Vertices[i].Coordinates = new Vector3((float)(r * Math.Cos(2 * Math.PI / n * (i - 1))), h, (float)(r * Math.Sin(2 * Math.PI / n * (i - 1))));
             }
 
             for (int i = 0; i <= n-1; i++)
@@ -40,12 +44,13 @@ namespace _3DTestWPF
                 mesh.Faces[i] = new Face { A = 0, B = (i + 2) % (n + 1), C = i + 1 };
             }
 
-            mesh.Vertices[4 * n + 1] = new Vector3(0, 0, 0);
+            mesh.Vertices[4 * n + 1].Coordinates = new Vector3(0, 0, 0);
 
 
             for (int i = 3 * n + 1; i <= 4 * n; i++)
             {
-                mesh.Vertices[i] = new Vector3((float)(r * Math.Cos(2 * Math.PI / n * (i - 1))), 0, (float)(r * Math.Sin(2 * Math.PI / n * (i - 1))));
+                mesh.Vertices[i].Normal = new Vector3(0, -1, 0);
+                mesh.Vertices[i].Coordinates = new Vector3((float)(r * Math.Cos(2 * Math.PI / n * (i - 1))), 0, (float)(r * Math.Sin(2 * Math.PI / n * (i - 1))));
             }
 
             for (int i = 3 * n; i <= 4 * n - 2; i++)
@@ -57,12 +62,17 @@ namespace _3DTestWPF
 
             for (int i = n + 1; i <= 2 * n; i++)
             {
-                mesh.Vertices[i] = new Vector3(mesh.Vertices[i - n]);
+                mesh.Vertices[i].Coordinates = new Vector3(mesh.Vertices[i - n].Coordinates);
             }
 
             for (int i = 2*n + 1; i <= 3 * n; i++)
             {
-                mesh.Vertices[i] = new Vector3(mesh.Vertices[i + n]);
+                mesh.Vertices[i].Coordinates = new Vector3(mesh.Vertices[i + n].Coordinates);
+            }
+
+            for(int i = n + 1; i <= 3 * n; i++)
+            {
+                mesh.Vertices[i].Normal = new Vector3(mesh.Vertices[i].Coordinates.X / r, 0, mesh.Vertices[i].Coordinates.Z / r);
             }
 
             for (int i = n; i <= 2 * n - 2; i++)
@@ -79,8 +89,17 @@ namespace _3DTestWPF
 
             mesh.Faces[3 * n - 1] = new Face { A = 3 * n, B = n + 1, C = 2 * n + 1 };
 
+
+            for(int i = 0; i <= 4*n + 1; i++)
+            {
+                Random rand = new Random();
+                mesh.Vertices[i].TextureCoordinates = new Vector2(10, 5);
+            }
+
             camera.Position = new Vector3(0, 0, 10.0f);
             camera.Target = new Vector3(0, 0, 0);
+
+            mesh.Texture = new Texture("pattern", 512, 512);
 
             CompositionTarget.Rendering += CompositionTarget_Rendering;
         }
